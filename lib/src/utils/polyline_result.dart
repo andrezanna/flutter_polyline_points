@@ -1,3 +1,5 @@
+import 'package:flutter_polyline_points/src/models/step.dart';
+
 import '../../flutter_polyline_points.dart';
 
 /// description:
@@ -14,11 +16,12 @@ class PolylineResult {
 
   /// list of decoded points
   List<PointLatLng> points;
+  List<Step?>? info;
 
   /// the error message returned from google, if none, the result will be empty
   String? errorMessage;
 
-  PolylineResult({this.status, this.points = const [], this.errorMessage = ""});
+  PolylineResult({this.status, this.points = const [], this.errorMessage = "",this.info});
 
 
 }

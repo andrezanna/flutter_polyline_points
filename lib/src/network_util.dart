@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import '../src/PointLatLng.dart';
 import '../src/utils/polyline_waypoint.dart';
 import '../src/utils/request_enums.dart';
+import 'models/step.dart';
 import 'utils/polyline_result.dart';
 
 class NetworkUtil {
@@ -18,6 +19,7 @@ class NetworkUtil {
       PointLatLng destination,
       TravelMode travelMode,
       List<PolylineWayPoint> wayPoints,
+      String language,
       bool avoidHighways,
       bool avoidTolls,
       bool avoidFerries,
@@ -28,9 +30,9 @@ class NetworkUtil {
       "origin": "${origin.latitude},${origin.longitude}",
       "destination": "${destination.latitude},${destination.longitude}",
       "mode": mode,
-      "avoidHighways": "$avoidHighways",
-      "avoidFerries": "$avoidFerries",
-      "avoidTolls": "$avoidTolls",
+      "language": language,
+      "avoid":
+          "${avoidHighways ? "higways|" : ""}${avoidFerries ? "ferries|" : ""}${avoidTolls ? "tolls|" : ""}",
       "key": googleApiKey
     };
     if (wayPoints.isNotEmpty) {
@@ -45,7 +47,7 @@ class NetworkUtil {
     Uri uri =
         Uri.https("maps.googleapis.com", "maps/api/directions/json", params);
 
-    // print('GOOGLE MAPS URL: ' + url);
+    print('GOOGLE MAPS URL: ' + uri.path);
     var response = await http.get(uri);
     if (response.statusCode == 200) {
       var parsedJson = json.decode(response.body);
@@ -53,8 +55,17 @@ class NetworkUtil {
       if (parsedJson["status"]?.toLowerCase() == STATUS_OK &&
           parsedJson["routes"] != null &&
           parsedJson["routes"].isNotEmpty) {
+        print(parsedJson["routes"][0]["legs"][0]["steps"]);
+        List jsonValues = parsedJson["routes"][0]["legs"][0]["steps"] as List;
+        List<Step?> stepsInfo = jsonValues.where((element) => element["travel_mode"]=="TRANSIT").map((e) {
+
+            return Step.fromJSON(e);
+
+        }).toList();
+
         result.points = decodeEncodedPolyline(
             parsedJson["routes"][0]["overview_polyline"]["points"]);
+        result.info=stepsInfo;
       } else {
         result.errorMessage = parsedJson["error_message"];
       }
