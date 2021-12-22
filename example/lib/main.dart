@@ -46,7 +46,7 @@ class _MapScreenState extends State<MapScreen> {
   Map<PolylineId, Polyline> polylines = {};
   List<LatLng> polylineCoordinates = [];
   PolylinePoints polylinePoints = PolylinePoints();
-  String googleAPiKey = "YOUR API KEY";
+  String googleAPiKey = "YOUR_API_KEY";
   Widget bottom = Container(height: 150,);
   @override
   void initState() {
@@ -146,12 +146,14 @@ class _MapScreenState extends State<MapScreen> {
           child: Column(
             children: [
               Text("Prevede transiti a pagamento:"),
-              ListView.builder(
-                shrinkWrap: true,
-                scrollDirection: Axis.vertical,
-                itemBuilder: (c, index) =>
-                    TransitInfoListWidget(step: result.info[index],index:index),
-                itemCount: result.info.length,
+              Expanded(
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.vertical,
+                  itemBuilder: (c, index) =>
+                      TransitInfoListWidget(step: result.info[index],index:index),
+                  itemCount: result.info.length,
+                ),
               ),
             ],
           ));

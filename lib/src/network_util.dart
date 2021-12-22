@@ -26,6 +26,8 @@ class NetworkUtil {
       bool optimizeWaypoints) async {
     String mode = travelMode.toString().replaceAll('TravelMode.', '');
     PolylineResult result = PolylineResult();
+    Map<String,String> transitOptions=new Map();
+    transitOptions["routingPreference"]="FEWER_TRANSFERS";
     var params = {
       "origin": "${origin.latitude},${origin.longitude}",
       "destination": "${destination.latitude},${destination.longitude}",
@@ -33,7 +35,8 @@ class NetworkUtil {
       "language": language,
       "avoid":
           "${avoidHighways ? "higways|" : ""}${avoidFerries ? "ferries|" : ""}${avoidTolls ? "tolls|" : ""}",
-      "key": googleApiKey
+      "key": googleApiKey,
+      "transitOptions": transitOptions.toString(),
     };
     if (wayPoints.isNotEmpty) {
       List wayPointsArray = [];
@@ -47,7 +50,7 @@ class NetworkUtil {
     Uri uri =
         Uri.https("maps.googleapis.com", "maps/api/directions/json", params);
 
-    print('GOOGLE MAPS URL: ' + uri.path);
+    print('GOOGLE MAPS URL: ' + uri.toString());
     var response = await http.get(uri);
     if (response.statusCode == 200) {
       var parsedJson = json.decode(response.body);
@@ -58,7 +61,7 @@ class NetworkUtil {
         print(parsedJson["routes"][0]["legs"][0]["steps"]);
         List jsonValues = parsedJson["routes"][0]["legs"][0]["steps"] as List;
         List<Step?> stepsInfo = jsonValues.where((element) => element["travel_mode"]=="TRANSIT").map((e) {
-
+            print("zazaza");
             return Step.fromJSON(e);
 
         }).toList();

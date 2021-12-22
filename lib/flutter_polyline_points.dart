@@ -26,7 +26,7 @@ class PolylinePoints {
         String language = "en",
       bool avoidHighways = false,
       bool avoidTolls = false,
-      bool avoidFerries = true,
+      bool avoidFerries = false,
       bool optimizeWaypoints = false}) async {
     return await util.getRouteBetweenCoordinates(
         googleApiKey,
