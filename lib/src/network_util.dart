@@ -58,10 +58,10 @@ class NetworkUtil {
       if (parsedJson["status"]?.toLowerCase() == STATUS_OK &&
           parsedJson["routes"] != null &&
           parsedJson["routes"].isNotEmpty) {
-        print(parsedJson["routes"][0]["legs"][0]["steps"]);
+        result.distance = parsedJson["routes"][0]["legs"][0]["distance"].text;
+        result.time = parsedJson["routes"][0]["legs"][0]["duration"].text;
         List jsonValues = parsedJson["routes"][0]["legs"][0]["steps"] as List;
         List<Step?> stepsInfo = jsonValues.where((element) => element["travel_mode"]=="TRANSIT").map((e) {
-            print("zazaza");
             return Step.fromJSON(e);
 
         }).toList();

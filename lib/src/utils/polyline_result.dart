@@ -20,8 +20,10 @@ class PolylineResult {
 
   /// the error message returned from google, if none, the result will be empty
   String? errorMessage;
+  String? time;
+  String? distance;
 
-  PolylineResult({this.status, this.points = const [], this.errorMessage = "",this.info});
+  PolylineResult({this.status, this.points = const [], this.errorMessage = "",this.info,this.time,this.distance});
 
 
 }
